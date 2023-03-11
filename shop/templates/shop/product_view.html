@@ -1,0 +1,73 @@
+{% extends 'shop/basics.html'%}
+{% block title %}{{product.product_name}}-{{product.category}}{% endblock %}
+
+{% block css%}
+<style>
+.col-5 img{
+    height:400px;
+    width: 100%;
+}
+</style>
+{% endblock%}
+
+{% block body %} 
+<div class="container">
+
+    <div class="row border border-3 border-danger">
+        <div class="col-5 border border-3 border-primary">
+            <img src="/media/{{product.image}}" alt="{{product.product_name}}">
+            <div class="row">
+                <div class="col-6 text-center">
+                    <button class="btn btn-primary w-75">Buy Now</button>
+                </div>
+                <div class="col-6  text-center">
+                    <button id="{{product.id}}" class="cart btn btn-primary w-75">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-7 my-2">
+            <h1>{{product.product_name}}</h1>
+            <h2>Rs:{{product.price}}</h2>
+            <h3>Category:{{product.categroy}}</h3>
+            <h3>SubCategory:{{product.subcategroy}}</h3>
+            Description:
+            <p>{{product.desc}}</p>
+        </div>
+    </div>
+</div>
+
+{% endblock%}
+
+
+{% block js %}
+<script>
+
+    if (localStorage.getItem("cart") != null) {
+        var cart = JSON.parse(localStorage.getItem("cart"));
+        document.getElementById("cart").innerHTML = Object.keys(cart).length;
+    } else {
+        var cart = {}
+    }
+    $('.cart').click(function () {
+        let id = this.id.toString();
+        console.log(id);
+        if (cart[id] != undefined) {
+            cart[id] = cart[id] + 1;
+        }
+        else {
+            cart[id] = 1;
+        }
+        console.log(cart);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        document.getElementById("cart").innerHTML = Object.keys(cart).length;
+    });
+    // $('#popcart').popover("show");
+
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl)
+    })
+    document.getElementById("popcart").setAttribute('data-bs-content', '<h5>Cart for your items in my shopping cart</h5>');
+</script>
+
+{% endblock %}
